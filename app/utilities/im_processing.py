@@ -6,6 +6,7 @@ from typing import Union
 from PIL import Image, ImageTk  # type: ignore[import]
 
 
+# Vs code is showing me this error: Union requires two or more type arguments.
 def load_img(path, size: Union[tuple[int] | float] = None):
     """
     This should load images.
@@ -27,4 +28,7 @@ def load_img(path, size: Union[tuple[int] | float] = None):
         new_size = tuple(int(length * size) for length in img.size)
         return ImageTk.PhotoImage(img.resize(new_size))
 
-    raise ValueError("Expected size to be either a tuble of ints, a float or None.")
+    
+#Grammar correction tuble to tuple 
+
+    raise ValueError("Expected size to be either a tuple of ints, a float or None.")
