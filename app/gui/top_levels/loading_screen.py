@@ -12,7 +12,7 @@ class LoadingScreen(Toplevel):
     """
 
     def __init__(
-        self, parent: Tk, *, seconds: int = 1, image_path: str = "./images/icon.png"
+        self, parent: Tk, *, seconds: int = 2, image_path: str = "./images/icon.png"
     ):
         super().__init__(parent)
         self.parent = parent

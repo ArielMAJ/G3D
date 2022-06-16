@@ -3,6 +3,8 @@ This module implements the app's main window class.
 """
 
 # from sys import platform
+import os
+import json
 import tkinter as tk
 from tkinter import filedialog, messagebox
 from utilities import im_processing, im_bg  # type: ignore[import]
@@ -22,9 +24,11 @@ class MainWindow(tk.Tk):
     All the app's main functionality should be acessible through this window.
     """
 
-    def __init__(self, *, draw_after_mainloop: bool = True):
+    def __init__(self, *, load_after_mainloop: bool = True):
         super().__init__()
         self.widgets: dict = {}
+        self.settings: dict = {}
+        self.vars: dict = {}
 
         self.font = ("Arial", 12)
         self.colors: dict[str, str] = {
@@ -38,18 +42,16 @@ class MainWindow(tk.Tk):
         self.colors["text_color"] = self.colors["gray"]
         self.colors["app_bg_color"] = self.colors["yellow"]
 
-        self.settings = None
-
-        if draw_after_mainloop:
+        if load_after_mainloop:
             # Loading screen will be responsible for hiding and showing main screen.
-            self.after(300, self._draw_window)
+            self.after(300, self._load_window)
         else:
             # Else the main screen should hide and show itself.
             self.withdraw()
-            self._draw_window()
+            self._load_window()
             self.deiconify()
 
-    def _draw_window(self):
+    def _load_window(self):
         self._basic_configs()
         self._place_menu_bar()
         self._place_widgets()
@@ -59,7 +61,36 @@ class MainWindow(tk.Tk):
         self.title("")
         self.iconphoto(False, im_processing.load_img("./images/icon.png", (30, 30)))
         # self.minsize(width=800, height=600)
-        self.config(padx=10, pady=10, bg=self.colors["app_bg_color"])
+        self.resizable(width=False, height=False)
+
+        self.config(padx=20, pady=30, bg=self.colors["app_bg_color"])
+
+        self._check_and_load_settings()
+
+        self.vars["folder_path"] = tk.StringVar()
+        self.vars["folder_path"].set(self.settings["default_path_to_images"])
+
+        # self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+
+    def _check_and_load_settings(self) -> None:
+        try:
+            with open(
+                "./resources/settings.json", "r", encoding="utf-8"
+            ) as settings_file:
+                self.settings = json.load(settings_file)
+        except FileNotFoundError:
+            self.settings = {
+                "default_path_to_images": "/",
+                "padx": 2,
+                "pady": 1,
+            }
+            if not os.path.exists("./resources"):
+                os.mkdir("./resources")
+            with open(
+                "./resources/settings.json", "w", encoding="utf-8"
+            ) as settings_file:
+                json.dump(self.settings, settings_file, indent=4)
 
     def _place_menu_bar(self):
         # Menu Bar object.
@@ -88,20 +119,76 @@ class MainWindow(tk.Tk):
         )
 
     def _place_widgets(self):
-        self.widgets["test_label"] = tk.Label(self, text="erh...", bg="yellow")
-        self.widgets["test_label"].pack()
+
+        self.widgets["lbl_folder"] = tk.Label(
+            self,
+            text="Pasta:",  # Folder
+            # Set "bg" to "self.colors["app_bg_color"]" once all widgets are placed.
+            bg="yellow",  # self.colors["app_bg_color"],
+            width=5,
+            anchor="w",
+            # justify="left",
+        )
+        self.widgets["lbl_folder"].grid(
+            row=0,
+            column=0,
+            padx=self.settings["padx"],
+            pady=self.settings["pady"],
+            sticky="NEWS",
+        )
+
+        self.widgets["lbl_folder_path"] = tk.Label(
+            self,
+            textvariable=self.vars["folder_path"],
+            # Set "bg" to "self.colors["app_bg_color"]" once all widgets are placed.
+            bg="red",  # self.colors["app_bg_color"],
+            width=60,
+            anchor=self._path_anchor,
+            # justify="left",
+        )
+        self.widgets["lbl_folder_path"].grid(
+            row=0,
+            column=1,
+            padx=self.settings["padx"],
+            pady=self.settings["pady"],
+            sticky="NEWS",
+        )
+
+        self.widgets["btn_search_folder"] = tk.Button(
+            self,
+            text="Mudar pasta",  # Change folder
+            command=self.search_folder_button_press,
+        )
+        self.widgets["btn_search_folder"].grid(
+            row=0,
+            column=2,
+            padx=self.settings["padx"],
+            pady=self.settings["pady"],
+            sticky="NEWS",
+        )
 
         self.widgets["btn_rembg_FOLDER"] = tk.Button(
             self,
-            text="Remover fundo de todas as pastas",
+            # Remove background (all subfolders)
+            text="Remover fundos\n(todas subpastas)",
             command=self.folder_remove_background_button_press,
         )
-        self.widgets["btn_rembg_FOLDER"].pack()
+        self.widgets["btn_rembg_FOLDER"].grid(
+            row=1,
+            column=2,
+            padx=self.settings["padx"],
+            pady=self.settings["pady"],
+            sticky="NEWS",
+        )
+
+        # self.update()
+        # if self.widgets["lbl_folder_path"].winfo_width() > 410:
+        #     self.widgets["lbl_folder_path"].configure(width=40)
 
     def _place_window_on_screen(self):
         self.update()
-        width = self.winfo_width() if self.winfo_width() > 800 else 800
-        height = self.winfo_height() if self.winfo_height() > 600 else 600
+        width = self.winfo_reqwidth() if self.winfo_reqwidth() > 1000 else 1000
+        height = self.winfo_reqheight() if self.winfo_reqheight() > 600 else 600
         offset = {
             "x": int(0.5 * self.winfo_screenwidth() - width // 2),
             "y": int(0.5 * self.winfo_screenheight() - height // 2 - 20),
@@ -110,6 +197,10 @@ class MainWindow(tk.Tk):
         # print(self.winfo_screenheight(), self.winfo_height())
         # print(offset, self.geometry())
         self.geometry(f"{width}x{height}+{offset['x']}+{offset['y']}")
+
+    @property
+    def _path_anchor(self) -> str:
+        return "center" if len(self.vars["folder_path"].get()) <= 85 else "e"
 
     def remove_background_button_press(self) -> None:
         """
@@ -138,38 +229,59 @@ class MainWindow(tk.Tk):
             im_bg.rm_bg(img_file_path)
 
         messagebox.showinfo(
+            # Finished
             title="Finalizado",
+            # Backgrounds removed successfully!
             message="Fundos removidos com sucesso!",
+            parent=self,
             # This specific icon removes the bell noise from the messagebox.
             # icon="question",
-            parent=self,
         )
 
     def folder_remove_background_button_press(self) -> None:
         """
-        Implementation of the background removing button.
+        Implementation of the background removing button for folder with subfolders containing
+        images.
 
-        - This should open a file navigator dialog to get an amount of image paths.
-        - These images should all be JPGs.
-        - If no image is selected the function should return. If any amount of images
-        are selected, they should have their background removed.
+        - The images should be JPGs only;
+        - Images should start with numbers 1 to 3;
+        - They shouldn't end in "G" (e.g. 1_IMG will be read but 1_IMG_NO_BG.jpg won't);
         """
-        selected_folder = filedialog.askdirectory(
-            # Select JPG images to remove background
-            title="Selecionar pasta com subpastas com imagens",
-        )
-        if not selected_folder:
-            return
-            
-        im_bg.rm_bg_from_folder(selected_folder)
+        im_bg.rm_bg_from_folder(self.settings["default_path_to_images"])
 
         messagebox.showinfo(
+            # Finished
             title="Finalizado",
+            # Backgrounds removed successfully!
             message="Fundos removidos com sucesso!",
+            parent=self,
             # This specific icon removes the bell noise from the messagebox.
             # icon="question",
-            parent=self,
         )
+
+    def search_folder_button_press(self) -> None:
+        """
+        This will open a folder navigator dialog to get a folder path.
+        This will update the settings.json file if a folder is selected and is different from the
+        current one. It will also update the label showing the current selected folder.
+        """
+        selected_folder = filedialog.askdirectory(
+            # Select folder with subfolders containing images to remove.
+            title="Selecionar pasta com subpastas com imagens",
+        )
+        if (
+            not selected_folder
+            or selected_folder == self.settings["default_path_to_images"]
+        ):
+            return
+
+        self._check_and_load_settings()
+        self.settings["default_path_to_images"] = selected_folder
+        with open("./resources/settings.json", "w", encoding="utf-8") as settings_file:
+            json.dump(self.settings, settings_file, indent=4)
+
+        self.vars["folder_path"].set(selected_folder)
+        self.widgets["lbl_folder_path"].configure(anchor=self._path_anchor)
 
 
 def main() -> int:
@@ -178,7 +290,7 @@ def main() -> int:
     screen. To get this function to run, you'll need to run this module as a "package" from the
     same folder as main.py (e.g.: py -m gui.main_window), otherwise it won't run.
     """
-    root = MainWindow(draw_after_mainloop=False)
+    root = MainWindow(load_after_mainloop=False)
     root.mainloop()
     return 0
 
