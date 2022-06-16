@@ -91,6 +91,13 @@ class MainWindow(tk.Tk):
         self.widgets["test_label"] = tk.Label(self, text="erh...", bg="yellow")
         self.widgets["test_label"].pack()
 
+        self.widgets["btn_rembg_FOLDER"] = tk.Button(
+            self,
+            text="Remover fundo de todas as pastas",
+            command=self.folder_remove_background_button_press,
+        )
+        self.widgets["btn_rembg_FOLDER"].pack()
+
     def _place_window_on_screen(self):
         self.update()
         width = self.winfo_width() if self.winfo_width() > 800 else 800
@@ -114,7 +121,7 @@ class MainWindow(tk.Tk):
         are selected, they should have their background removed.
         """
         selected_files = filedialog.askopenfilenames(
-            initialdir=r"/",
+            # initialdir=r"/",
             # Select JPG images to remove background
             title="Selecionar imagens JPG para remover fundo",
             filetypes=(
@@ -129,6 +136,32 @@ class MainWindow(tk.Tk):
 
         for img_file_path in selected_files:
             im_bg.rm_bg(img_file_path)
+
+        messagebox.showinfo(
+            title="Finalizado",
+            message="Fundos removidos com sucesso!",
+            # This specific icon removes the bell noise from the messagebox.
+            # icon="question",
+            parent=self,
+        )
+
+    def folder_remove_background_button_press(self) -> None:
+        """
+        Implementation of the background removing button.
+
+        - This should open a file navigator dialog to get an amount of image paths.
+        - These images should all be JPGs.
+        - If no image is selected the function should return. If any amount of images
+        are selected, they should have their background removed.
+        """
+        selected_folder = filedialog.askdirectory(
+            # Select JPG images to remove background
+            title="Selecionar pasta com subpastas com imagens",
+        )
+        if not selected_folder:
+            return
+            
+        im_bg.rm_bg_from_folder(selected_folder)
 
         messagebox.showinfo(
             title="Finalizado",
