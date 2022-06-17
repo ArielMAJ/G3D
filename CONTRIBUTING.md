@@ -11,9 +11,27 @@ either open a new one (if needed) or comment in open ones.
 
 ## Pull Request Process
 
-1. Preferably always link your PR to an issue and explain a bit of what you did;
-2. Your PR will be reviewed and more changes/explanations might be asked (if necessary);
-3. If your changes are accepted they'll be merged.
+### Set it up:
+
+0. Fork the repository and clone your fork to your local machine (if you haven't already);
+    - Make sure you have installed everything in `requirements.txt`: `pip install -r requirements.txt`;
+    - Make sure you have downloaded u2net_human_seg.pth [here](https://github.com/xuebinqin/U-2-Net) and placed it in the correct folder.
+1. Make sure your fork is up to date with the original project;
+    - Take a look at your fork's GH page: GH will let you know if your fork isn't up-to-date.
+2. Make sure your local copy is up-to-date with your fork/original project.
+    - `git log --oneline`: compare your latest commits to your fork's;
+    - `git pull` any new changes to your local machine.
+
+### Work on it:
+
+1. Start a new branch locally;
+2. Make your changes;
+3. Push your branch to your fork;
+4. Start your Pull Request (PR) from your branch to the original project's target branch (e.g. main);
+    - Preferably always link your PR to an issue and explain a bit of what you did (in the PR);
+5. Your PR will be reviewed and more changes/explanations might be asked (if necessary);
+6. If your changes are accepted they'll be merged;
+7. After you changes are merged, make sure to update your fork and local copy before making new changes.
 
 ## Code of Conduct
 
