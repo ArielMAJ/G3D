@@ -52,12 +52,20 @@ class MainWindow(tk.Tk):
             self.deiconify()
 
     def _load_window(self):
+        """
+        This function will call subfunctions to load the app.
+        """
         self._basic_configs()
         self._place_menu_bar()
         self._place_widgets()
         self._place_window_on_screen()
 
     def _basic_configs(self):
+        """
+        This function should contain all basic configurations such as:
+        - Loading images/files/etc;
+        - Creating variables (StringVar, IntVar, etc);
+        """
         self.title("")
         self.iconphoto(False, im_processing.load_img("./images/icon.png", (30, 30)))
         # self.minsize(width=800, height=600)
@@ -74,6 +82,10 @@ class MainWindow(tk.Tk):
         self.grid_columnconfigure(1, weight=1)
 
     def _check_and_load_settings(self) -> None:
+        """
+        This function will load the app's current settings. If it doesn't exist, it should
+        partially create a settings file with some defaults.
+        """
         try:
             with open(
                 "./resources/settings.json", "r", encoding="utf-8"
@@ -93,6 +105,9 @@ class MainWindow(tk.Tk):
                 json.dump(self.settings, settings_file, indent=4)
 
     def _place_menu_bar(self):
+        """
+        This function should handle the menu bar creation.
+        """
         # Menu Bar object.
         self.widgets["menu_bar"] = tk.Menu(self)
         self.config(menu=self.widgets["menu_bar"])
@@ -119,6 +134,9 @@ class MainWindow(tk.Tk):
         )
 
     def _place_widgets(self):
+        """
+        This function should handle the non-menubar widgets.
+        """
 
         self.widgets["lbl_folder"] = tk.Label(
             self,
@@ -176,6 +194,75 @@ class MainWindow(tk.Tk):
         self.widgets["btn_rembg_FOLDER"].grid(
             row=1,
             column=2,
+            padx=self.settings["padx"],
+            pady=self.settings["pady"],
+            sticky="NEWS",
+        )
+
+        self.widgets["lbl_folders_to_process"] = tk.Label(
+            text="...",  # self.label_templates_disponiveis(),
+            width=45,
+            fg=self.colors["text_color"],
+            font=self.font,
+            # Set "bg" to "self.colors["app_bg_color"]" once all widgets are placed.
+            bg="lightblue",
+            anchor="center",
+        )
+        self.widgets["lbl_folders_to_process"].grid(
+            column=1,
+            row=1,
+            padx=self.settings["padx"],
+            pady=self.settings["pady"],
+            sticky="NEWS",
+        )
+
+        self.widgets["btn_montar"] = tk.Button(
+            text="Montar Templates",  # "Assemble" templates.
+            # image=img_start,
+            padx=self.settings["padx"],
+            # border=0,
+            # bg=self.colors["app_bg_color"],
+            # activebackground=self.colors["app_bg_color"],
+            # command=...,
+        )
+        self.widgets["btn_montar"].grid(
+            column=2,
+            row=2,
+            padx=self.settings["padx"],
+            pady=self.settings["pady"],
+            sticky="NEWS",
+        )
+
+        self.widgets["lbl_folders_to_upload"] = tk.Label(
+            text="...",  # self.label_templates_upload(),
+            # width=45,
+            fg=self.colors["text_color"],
+            font=self.font,
+            # Set "bg" to "self.colors["app_bg_color"]" once all widgets are placed.
+            bg="lightblue",
+            anchor="center",
+        )
+        self.widgets["lbl_folders_to_upload"].grid(
+            column=1,
+            row=3,
+            padx=self.settings["padx"],
+            pady=self.settings["pady"],
+            sticky="NEWS",
+        )
+
+        self.widgets["btn_upload"] = tk.Button(
+            text="Fazer Upload",  # Upload images.
+            # image=img_start,
+            padx=self.settings["padx"],
+            # border=0,
+            # bg=self.colors["app_bg_color"],
+            # activebackground=self.colors["app_bg_color"],
+            # command=...,
+        )
+
+        self.widgets["btn_upload"].grid(
+            column=2,
+            row=3,
             padx=self.settings["padx"],
             pady=self.settings["pady"],
             sticky="NEWS",
