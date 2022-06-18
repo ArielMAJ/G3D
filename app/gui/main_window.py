@@ -193,7 +193,7 @@ class MainWindow(tk.Tk):
             command=self.folder_remove_background_button_press,
         )
         self.widgets["btn_rembg_FOLDER"].grid(
-            row=1,
+            row=2,
             column=2,
             padx=self.settings["padx"],
             pady=self.settings["pady"],
@@ -228,7 +228,7 @@ class MainWindow(tk.Tk):
         )
         self.widgets["btn_montar"].grid(
             column=2,
-            row=2,
+            row=3,
             padx=self.settings["padx"],
             pady=self.settings["pady"],
             sticky="NEWS",
@@ -263,7 +263,24 @@ class MainWindow(tk.Tk):
 
         self.widgets["btn_upload"].grid(
             column=2,
-            row=3,
+            row=4,
+            padx=self.settings["padx"],
+            pady=self.settings["pady"],
+            sticky="NEWS",
+        )
+
+        self.widgets["btn_refresh"] = tk.Button(
+            text="Atualizar",  # Refresh .
+            # image=img_start,
+            padx=self.settings["padx"],
+            # border=0,
+            # bg=self.colors["app_bg_color"],
+            # activebackground=self.colors["app_bg_color"],
+            # command=...,
+        )
+        self.widgets["btn_refresh"].grid(
+            column=2,
+            row=1,
             padx=self.settings["padx"],
             pady=self.settings["pady"],
             sticky="NEWS",
