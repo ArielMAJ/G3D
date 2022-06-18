@@ -38,7 +38,7 @@ def rm_bg(img_path: str) -> None:
 
     # Making sure we got the correct input.
     dot_pos = img_path.rfind(".")
-    if dot_pos == -1 or not img_path[dot_pos + 1 :].lower() in ["jpg"]:
+    if dot_pos == -1 or not img_path[dot_pos + 1 :].lower() in ["jpg", "jpeg"]:
         raise ValueError("Expected JPG images.")
 
     # Replacing "\" to "/" because *Windows*.
