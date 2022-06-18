@@ -9,20 +9,31 @@ from PIL import Image, ImageTk  # type: ignore[import]
 class LoadingScreen(Toplevel):
     """
     This top level will create a loading screen and display it for a given amount of seconds.
+    It can accept a list of threads to wait for before closing itself and showing the main screen.
     """
 
     def __init__(
-        self, parent: Tk, *, seconds: int = 2, image_path: str = "./images/icon.png"
+        self,
+        parent: Tk,
+        *,
+        seconds: float = 0.5,
+        image_path: str = "./images/icon.png",
+        wait_for: list = None,
     ):
         super().__init__(parent)
         self.parent = parent
-        self.seconds = seconds
-        self.image_path = image_path
+        self.seconds: float = seconds
+        self.image_path: str = image_path
+
+        if wait_for is None:
+            wait_for = []
+        self.wait_for: list = wait_for
 
         self.logo = Image.open(self.image_path)
         self.logo_tk = ImageTk.PhotoImage(self.logo)
 
         self._draw_window()
+        self._wait()
 
     def _draw_window(self) -> None:
 
@@ -48,8 +59,13 @@ class LoadingScreen(Toplevel):
 
         self.lift()
         self.deiconify()
-        self.after(int(self.seconds * 950), self.parent.deiconify)
-        self.after(int(self.seconds * 1000), self.destroy)
+
+    def _wait(self) -> None:
+        for thread in self.wait_for:
+            self.after(int(self.seconds * 1000) + 50, thread.join)
+
+        self.after(int(self.seconds * 1000) + 100, self.parent.deiconify)
+        self.after(int(self.seconds * 1000) + 200, self.destroy)
 
 
 def main() -> int:
