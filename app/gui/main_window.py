@@ -44,7 +44,7 @@ class MainWindow(tk.Tk):
 
         if load_after_mainloop:
             # Loading screen will be responsible for hiding and showing main screen.
-            self.after(300, self._load_window)
+            self.after(50, self._load_window)
         else:
             # Else the main screen should hide and show itself.
             self.withdraw()

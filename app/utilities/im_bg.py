@@ -20,7 +20,8 @@ def importer():
     from rembg import bg  # type: ignore[import]
 
 
-threading.Thread(target=importer).start()
+imp_th = threading.Thread(target=importer)
+imp_th.start()
 
 
 def main() -> int:
