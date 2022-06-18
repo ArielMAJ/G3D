@@ -66,14 +66,14 @@ class MainWindow(tk.Tk):
         - Loading images/files/etc;
         - Creating variables (StringVar, IntVar, etc);
         """
-        self.title("")
+        self._check_and_load_settings()
+
+        self.title(self.settings["title"])
         self.iconphoto(False, im_processing.load_img("./images/icon.png", (30, 30)))
         # self.minsize(width=800, height=600)
         self.resizable(width=False, height=False)
 
         self.config(padx=20, pady=30, bg=self.colors["app_bg_color"])
-
-        self._check_and_load_settings()
 
         self.vars["folder_path"] = tk.StringVar()
         self.vars["folder_path"].set(self.settings["default_path_to_images"])
@@ -96,6 +96,7 @@ class MainWindow(tk.Tk):
                 "default_path_to_images": "/",
                 "padx": 2,
                 "pady": 1,
+                "title": "",
             }
             if not os.path.exists("./resources"):
                 os.mkdir("./resources")
