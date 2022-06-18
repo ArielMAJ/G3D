@@ -109,29 +109,73 @@ class MainWindow(tk.Tk):
         """
         This function should handle the menu bar creation.
         """
-        # Menu Bar object.
+        # The Menu-Bar object ("the whole strip", without buttons just yet).
         self.widgets["menu_bar"] = tk.Menu(self)
         self.config(menu=self.widgets["menu_bar"])
 
-        # File button in menu.
-        self.widgets["menu_file"] = tk.Menu(self.widgets["menu_bar"], tearoff="off")
-        self.widgets["menu_file"].add_cascade(
-            label="Print", command=lambda: print("Hi")
-        )
-        self.widgets["menu_file"].add_separator()
-        self.widgets["menu_file"].add_cascade(label="Exit", command=self.destroy)
+        ###################################################################
+        # The menu-widgets/buttons will be created below.
+        # They can be either an actual button with a command or have an
+        # associated submenu with buttons (or more submenus).
 
-        # rembg button in menu.
-        self.widgets["menu_rembg"] = tk.Menu(self.widgets["menu_bar"], tearoff="off")
+        ###################################################################
+        # Options button in menu (it will open a submenu).
+        self.widgets["menu_options"] = tk.Menu(self.widgets["menu_bar"], tearoff="off")
 
-        # Adding buttons to menu bar.
-        self.widgets["menu_bar"].add_cascade(
-            label="File", menu=self.widgets["menu_file"]
+        # Adding exit button (menu-widget with a command).
+        self.widgets["menu_options"].add_command(
+            label="Sair",  # Leave
+            command=self.destroy,
         )
-        self.widgets["menu_bar"].add_command(
-            # self.widgets["menu_rembg"],
-            label="Remover Fundo",
+
+        ###################################################################
+        # Images/rembg button in menu.
+        self.widgets["menu_images"] = tk.Menu(self.widgets["menu_bar"], tearoff="off")
+        # Creating sub menu for image segmentation.
+        self.widgets["sub_menu_segmentation"] = tk.Menu(
+            self.widgets["menu_images"],
+            tearoff="off",
+        )
+
+        # Adding sub_menu_segmentation to menu_images
+        self.widgets["menu_images"].add_cascade(
+            label="Remover fundos",
+            menu=self.widgets["sub_menu_segmentation"],
+        )
+
+        # Buttuns inside submenu
+        self.widgets["sub_menu_segmentation"].add_command(
+            label="Pessoas/Rostos",
             command=self.remove_background_button_press,
+        )
+        self.widgets["sub_menu_segmentation"].add_command(
+            label="Roupas",
+            command=...,
+        )
+        self.widgets["sub_menu_segmentation"].add_command(
+            label="Etc",
+            command=...,
+        )
+
+        ###################################################################
+        # Adding widgets (menu buttons) to menu bar.
+
+        self.widgets["menu_bar"].add_cascade(
+            label="Opções",  # Options
+            menu=self.widgets["menu_options"],
+        )
+
+        self.widgets["menu_bar"].add_cascade(
+            label="Imagens",  # Images
+            menu=self.widgets["menu_images"],
+        )
+
+        self.widgets["menu_bar"].add_command(
+            label="Configurações",  # Settings
+            command=lambda: messagebox.showinfo(
+                title="To Be Implemented (placeholder)",
+                message="A top level should open here and show the settings",
+            ),
         )
 
     def _place_widgets(self):
