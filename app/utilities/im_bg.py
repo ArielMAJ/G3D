@@ -30,7 +30,9 @@ def main() -> int:
     return 0
 
 
-def rm_bg(img_path: str) -> None:
+def rm_bg(
+    img_path: str, model_name: str = "u2net_human_seg", alpha_matting: bool = True
+) -> None:
     """
     This function will remove the background of a given image. It should receive a JPG image path.
     It will create and save a JPG image with white background.
@@ -50,7 +52,7 @@ def rm_bg(img_path: str) -> None:
 
     # Removing background from image using u2net_human_seg.
     output_as_bytes = bg.remove(
-        input_img, alpha_matting=True, model_name="u2net_human_seg"
+        input_img, alpha_matting=alpha_matting, model_name=model_name
     )
     # Converting the output as bytes to a PIL Image.
     pil_img = Image.open(io.BytesIO(output_as_bytes))

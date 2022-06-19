@@ -150,11 +150,13 @@ class MainWindow(tk.Tk):
         )
         self.widgets["sub_menu_segmentation"].add_command(
             label="Roupas",
-            command=...,
+            command=lambda: self.remove_background_button_press(
+                model_name="cloth_segm_u2net_latest", alpha_matting=False
+            ),
         )
         self.widgets["sub_menu_segmentation"].add_command(
             label="Etc",
-            command=...,
+            command=lambda: self.remove_background_button_press(model_name="u2net"),
         )
 
         ###################################################################
@@ -351,7 +353,9 @@ class MainWindow(tk.Tk):
     def _path_anchor(self) -> str:
         return "center" if len(self.vars["folder_path"].get()) <= 85 else "e"
 
-    def remove_background_button_press(self) -> None:
+    def remove_background_button_press(
+        self, model_name: str = "u2net_human_seg", alpha_matting: bool = False
+    ) -> None:
         """
         Implementation of the background removing button.
 
@@ -375,7 +379,11 @@ class MainWindow(tk.Tk):
             return
 
         for img_file_path in selected_files:
-            im_bg.rm_bg(img_file_path)
+            im_bg.rm_bg(
+                img_file_path,
+                model_name=model_name,
+                alpha_matting=alpha_matting,
+            )
 
         messagebox.showinfo(
             # Finished
