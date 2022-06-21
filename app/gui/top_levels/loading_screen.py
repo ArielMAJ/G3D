@@ -52,7 +52,7 @@ class LoadingScreen(Toplevel):
         self.geometry(f"+{offset['x']}+{offset['y']}")
 
         self.overrideredirect(True)
-        self.attributes("-topmost", True)
+        # self.attributes("-topmost", True)
         self.attributes("-disabled", True)
         self.attributes("-transparentcolor", "black")
         self.attributes("-alpha", 0.8)
