@@ -18,7 +18,7 @@ screen.
 
 # Imports will only correctly happen if the venv is activated.
 from gui import main_window  # type: ignore[import]
-from gui.top_levels.loading_screen import LoadingScreen  # type: ignore[import]
+from gui.loading_screen import LoadingScreen  # type: ignore[import]
 
 # If you don't want to activate HiDPI compatibility in your python executables, uncomment these two:
 # from ctypes import windll
@@ -29,9 +29,11 @@ def main() -> int:
     """
     This function will start the app.
     """
-    root = main_window.MainWindow()
     # This will force loading screen to stay up until rembg is imported (it is a slow import).
-    LoadingScreen(root, wait_for=[main_window.im_bg.imp_th])
+    loading_screen = LoadingScreen(wait_for=[main_window.im_bg.imp_th])
+    loading_screen.mainloop()
+
+    root = main_window.MainWindow()
     root.mainloop()
     return 0
 

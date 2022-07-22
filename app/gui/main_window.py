@@ -7,6 +7,8 @@ import os
 import json
 import tkinter as tk
 from tkinter import filedialog, messagebox
+import customtkinter as ctk  # type: ignore[import]
+
 from utilities import im_processing, im_bg  # type: ignore[import]
 
 # try:
@@ -18,47 +20,46 @@ from utilities import im_processing, im_bg  # type: ignore[import]
 # from PIL import Image, ImageTk
 # import threading
 
+ctk.set_appearance_mode("dark")
+ctk.set_default_color_theme("dark-blue")
 
-class MainWindow(tk.Tk):
+
+class MainWindow(ctk.CTk):
     """
     All the app's main functionality should be acessible through this window.
     """
 
-    def __init__(self, *, load_after_mainloop: bool = True):
+    def __init__(self):
         super().__init__()
         self.widgets: dict = {}
         self.settings: dict = {}
         self.vars: dict = {}
 
-        self.font = ("Arial", 12)
-        self.colors: dict[str, str] = {
-            "yellow": "#FCE388",
-            "blue": "#C2CEFF",
-            "red": "#B52C30",
-            "green": "#256A49",
-            "gray": "#525a49",
-        }
+        # self.font = ("Arial", 12)
+        # self.colors: dict[str, str] = {
+        #     "yellow": "#FCE388",
+        #     "blue": "#C2CEFF",
+        #     "red": "#B52C30",
+        #     "green": "#256A49",
+        #     "gray": "#525a49",
+        # }
 
-        self.colors["text_color"] = self.colors["gray"]
-        self.colors["app_bg_color"] = self.colors["yellow"]
+        # self.colors["text_color"] = self.colors["gray"]
+        # self.colors["app_bg_color"] = self.colors["yellow"]
 
-        if load_after_mainloop:
-            # Loading screen will be responsible for hiding and showing main screen.
-            self.after(50, self._load_window)
-        else:
-            # Else the main screen should hide and show itself.
-            self.withdraw()
-            self._load_window()
-            self.deiconify()
+        # self.after(0, self._load_window)
+        self._load_window()
 
     def _load_window(self):
         """
         This function will call subfunctions to load the app.
         """
+        # self.withdraw()
         self._basic_configs()
-        self._place_menu_bar()
+        # self._place_menu_bar()
         self._place_widgets()
         self._place_window_on_screen()
+        # self.deiconify()
 
     def _basic_configs(self):
         """
@@ -73,7 +74,8 @@ class MainWindow(tk.Tk):
         # self.minsize(width=800, height=600)
         self.resizable(width=False, height=False)
 
-        self.config(padx=20, pady=30, bg=self.colors["app_bg_color"])
+        # self.config(padx=20, pady=30, bg=self.colors["app_bg_color"])
+        self.config(padx=20, pady=30)
 
         self.vars["folder_path"] = tk.StringVar()
         self.vars["folder_path"].set(self.settings["default_path_to_images"])
@@ -94,7 +96,7 @@ class MainWindow(tk.Tk):
         except FileNotFoundError:
             self.settings = {
                 "default_path_to_images": "/",
-                "padx": 2,
+                "padx": 5,
                 "pady": 1,
                 "title": "",
             }
@@ -105,93 +107,93 @@ class MainWindow(tk.Tk):
             ) as settings_file:
                 json.dump(self.settings, settings_file, indent=4)
 
-    def _place_menu_bar(self):
-        """
-        This function should handle the menu bar creation.
-        """
-        # The Menu-Bar object ("the whole strip", without buttons just yet).
-        self.widgets["menu_bar"] = tk.Menu(self)
-        self.config(menu=self.widgets["menu_bar"])
+    # def _place_menu_bar(self):
+    #     """
+    #     This function should handle the menu bar creation.
+    #     """
+    #     # The Menu-Bar object ("the whole strip", without buttons just yet).
+    #     self.widgets["menu_bar"] = tk.Menu(self)
+    #     self.config(menu=self.widgets["menu_bar"])
 
-        ###################################################################
-        # The menu-widgets/buttons will be created below.
-        # They can be either an actual button with a command or have an
-        # associated submenu with buttons (or more submenus).
+    #     ###################################################################
+    #     # The menu-widgets/buttons will be created below.
+    #     # They can be either an actual button with a command or have an
+    #     # associated submenu with buttons (or more submenus).
 
-        ###################################################################
-        # Options button in menu (it will open a submenu).
-        self.widgets["menu_options"] = tk.Menu(self.widgets["menu_bar"], tearoff="off")
+    #     ###################################################################
+    #     # Options button in menu (it will open a submenu).
+    #     self.widgets["menu_options"] = tk.Menu(self.widgets["menu_bar"], tearoff="off")
 
-        # Adding exit button (menu-widget with a command).
-        self.widgets["menu_options"].add_command(
-            label="Sair",  # Leave
-            command=self.destroy,
-        )
+    #     # Adding exit button (menu-widget with a command).
+    #     self.widgets["menu_options"].add_command(
+    #         label="Sair",  # Leave
+    #         command=self.destroy,
+    #     )
 
-        ###################################################################
-        # Images/rembg button in menu.
-        self.widgets["menu_images"] = tk.Menu(self.widgets["menu_bar"], tearoff="off")
-        # Creating sub menu for image segmentation.
-        self.widgets["sub_menu_segmentation"] = tk.Menu(
-            self.widgets["menu_images"],
-            tearoff="off",
-        )
+    #     ###################################################################
+    #     # Images/rembg button in menu.
+    #     self.widgets["menu_images"] = tk.Menu(self.widgets["menu_bar"], tearoff="off")
+    #     # Creating sub menu for image segmentation.
+    #     self.widgets["sub_menu_segmentation"] = tk.Menu(
+    #         self.widgets["menu_images"],
+    #         tearoff="off",
+    #     )
 
-        # Adding sub_menu_segmentation to menu_images
-        self.widgets["menu_images"].add_cascade(
-            label="Remover fundos",
-            menu=self.widgets["sub_menu_segmentation"],
-        )
+    #     # Adding sub_menu_segmentation to menu_images
+    #     self.widgets["menu_images"].add_cascade(
+    #         label="Remover fundos",
+    #         menu=self.widgets["sub_menu_segmentation"],
+    #     )
 
-        # Buttuns inside submenu
-        self.widgets["sub_menu_segmentation"].add_command(
-            label="Pessoas/Rostos",
-            command=self.remove_background_button_press,
-        )
-        self.widgets["sub_menu_segmentation"].add_command(
-            label="Roupas",
-            command=lambda: self.remove_background_button_press(
-                model_name="cloth_segm_u2net_latest", alpha_matting=False
-            ),
-        )
-        self.widgets["sub_menu_segmentation"].add_command(
-            label="Etc",
-            command=lambda: self.remove_background_button_press(model_name="u2net"),
-        )
+    #     # Buttuns inside submenu
+    #     self.widgets["sub_menu_segmentation"].add_command(
+    #         label="Pessoas/Rostos",
+    #         command=self.remove_background_button_press,
+    #     )
+    #     self.widgets["sub_menu_segmentation"].add_command(
+    #         label="Roupas",
+    #         command=lambda: self.remove_background_button_press(
+    #             model_name="cloth_segm_u2net_latest", alpha_matting=False
+    #         ),
+    #     )
+    #     self.widgets["sub_menu_segmentation"].add_command(
+    #         label="Etc",
+    #         command=lambda: self.remove_background_button_press(model_name="u2net"),
+    #     )
 
-        ###################################################################
-        # Adding widgets (menu buttons) to menu bar.
+    #     ###################################################################
+    #     # Adding widgets (menu buttons) to menu bar.
 
-        self.widgets["menu_bar"].add_cascade(
-            label="Opções",  # Options
-            menu=self.widgets["menu_options"],
-        )
+    #     self.widgets["menu_bar"].add_cascade(
+    #         label="Opções",  # Options
+    #         menu=self.widgets["menu_options"],
+    #     )
 
-        self.widgets["menu_bar"].add_cascade(
-            label="Imagens",  # Images
-            menu=self.widgets["menu_images"],
-        )
+    #     self.widgets["menu_bar"].add_cascade(
+    #         label="Imagens",  # Images
+    #         menu=self.widgets["menu_images"],
+    #     )
 
-        self.widgets["menu_bar"].add_command(
-            label="Configurações",  # Settings
-            command=lambda: messagebox.showinfo(
-                title="To Be Implemented (placeholder)",
-                message="A top level should open here and show the settings",
-            ),
-        )
+    #     self.widgets["menu_bar"].add_command(
+    #         label="Configurações",  # Settings
+    #         command=lambda: messagebox.showinfo(
+    #             title="To Be Implemented (placeholder)",
+    #             message="A top level should open here and show the settings",
+    #         ),
+    #     )
 
     def _place_widgets(self):
         """
         This function should handle the non-menubar widgets.
         """
 
-        self.widgets["lbl_folder"] = tk.Label(
+        self.widgets["lbl_folder"] = ctk.CTkLabel(
             self,
             text="Pasta:",  # Folder
             # Set "bg" to "self.colors["app_bg_color"]" once all widgets are placed.
-            bg="yellow",  # self.colors["app_bg_color"],
+            bg_color="green",  # self.colors["app_bg_color"],
             width=5,
-            anchor="w",
+            # anchor="w",
             # justify="left",
         )
         self.widgets["lbl_folder"].grid(
@@ -202,14 +204,14 @@ class MainWindow(tk.Tk):
             sticky="NEWS",
         )
 
-        self.widgets["lbl_folder_path"] = tk.Label(
+        self.widgets["lbl_folder_path"] = ctk.CTkLabel(
             self,
             textvariable=self.vars["folder_path"],
             # Set "bg" to "self.colors["app_bg_color"]" once all widgets are placed.
-            bg="red",  # self.colors["app_bg_color"],
+            bg_color="green",  # self.colors["app_bg_color"],
             width=60,
             anchor=self._path_anchor,
-            # justify="left",
+            justify="left",
         )
         self.widgets["lbl_folder_path"].grid(
             row=0,
@@ -219,7 +221,7 @@ class MainWindow(tk.Tk):
             sticky="NEWS",
         )
 
-        self.widgets["btn_search_folder"] = tk.Button(
+        self.widgets["btn_search_folder"] = ctk.CTkButton(
             self,
             text="Mudar pasta",  # Change folder
             command=self.search_folder_button_press,
@@ -232,7 +234,7 @@ class MainWindow(tk.Tk):
             sticky="NEWS",
         )
 
-        self.widgets["btn_rembg_FOLDER"] = tk.Button(
+        self.widgets["btn_rembg_FOLDER"] = ctk.CTkButton(
             self,
             # Remove background (all subfolders)
             text="Remover fundos\n(todas subpastas)",
@@ -246,14 +248,14 @@ class MainWindow(tk.Tk):
             sticky="NEWS",
         )
 
-        self.widgets["lbl_folders_to_process"] = tk.Label(
+        self.widgets["lbl_folders_to_process"] = ctk.CTkLabel(
             text="...",  # self.label_templates_disponiveis(),
-            width=45,
-            fg=self.colors["text_color"],
-            font=self.font,
+            # width=45,
+            # fg_color=self.colors["text_color"],
+            # font=self.font,
             # Set "bg" to "self.colors["app_bg_color"]" once all widgets are placed.
-            bg="lightblue",
-            anchor="center",
+            bg_color="red",
+            # anchor="center",
         )
         self.widgets["lbl_folders_to_process"].grid(
             column=1,
@@ -263,10 +265,10 @@ class MainWindow(tk.Tk):
             sticky="NEWS",
         )
 
-        self.widgets["btn_montar"] = tk.Button(
+        self.widgets["btn_montar"] = ctk.CTkButton(
             text="Montar Templates",  # "Assemble" templates.
             # image=img_start,
-            padx=self.settings["padx"],
+            # padx=self.settings["padx"],
             # border=0,
             # bg=self.colors["app_bg_color"],
             # activebackground=self.colors["app_bg_color"],
@@ -280,14 +282,14 @@ class MainWindow(tk.Tk):
             sticky="NEWS",
         )
 
-        self.widgets["lbl_folders_to_upload"] = tk.Label(
+        self.widgets["lbl_folders_to_upload"] = ctk.CTkLabel(
             text="...",  # self.label_templates_upload(),
             # width=45,
-            fg=self.colors["text_color"],
-            font=self.font,
+            # fg=self.colors["text_color"],
+            # font=self.font,
             # Set "bg" to "self.colors["app_bg_color"]" once all widgets are placed.
-            bg="lightblue",
-            anchor="center",
+            bg_color="blue",
+            # anchor="center",
         )
         self.widgets["lbl_folders_to_upload"].grid(
             column=1,
@@ -297,10 +299,10 @@ class MainWindow(tk.Tk):
             sticky="NEWS",
         )
 
-        self.widgets["btn_upload"] = tk.Button(
+        self.widgets["btn_upload"] = ctk.CTkButton(
             text="Fazer Upload",  # Upload images.
             # image=img_start,
-            padx=self.settings["padx"],
+            # padx=self.settings["padx"],
             # border=0,
             # bg=self.colors["app_bg_color"],
             # activebackground=self.colors["app_bg_color"],
@@ -315,10 +317,10 @@ class MainWindow(tk.Tk):
             sticky="NEWS",
         )
 
-        self.widgets["btn_refresh"] = tk.Button(
+        self.widgets["btn_refresh"] = ctk.CTkButton(
             text="Atualizar",  # Refresh .
             # image=img_start,
-            padx=self.settings["padx"],
+            # padx=self.settings["padx"],
             # border=0,
             # bg=self.colors["app_bg_color"],
             # activebackground=self.colors["app_bg_color"],
@@ -337,7 +339,7 @@ class MainWindow(tk.Tk):
         #     self.widgets["lbl_folder_path"].configure(width=40)
 
     def _place_window_on_screen(self):
-        self.update()
+        # self.update()
         width = self.winfo_reqwidth() if self.winfo_reqwidth() > 1000 else 1000
         height = self.winfo_reqheight() if self.winfo_reqheight() > 600 else 600
         offset = {
@@ -348,10 +350,11 @@ class MainWindow(tk.Tk):
         # print(self.winfo_screenheight(), self.winfo_height())
         # print(offset, self.geometry())
         self.geometry(f"{width}x{height}+{offset['x']}+{offset['y']}")
+        self.set_scaling(1, 1, 1)
 
     @property
     def _path_anchor(self) -> str:
-        return "center" if len(self.vars["folder_path"].get()) <= 85 else "e"
+        return "center" if len(self.vars["folder_path"].get()) <= 85 else "w"
 
     def remove_background_button_press(
         self, model_name: str = "u2net_human_seg", alpha_matting: bool = False
@@ -447,7 +450,7 @@ def main() -> int:
     screen. To get this function to run, you'll need to run this module as a "package" from the
     same folder as main.py (e.g.: py -m gui.main_window), otherwise it won't run.
     """
-    root = MainWindow(load_after_mainloop=False)
+    root = MainWindow()
     root.mainloop()
     return 0
 
