@@ -1,3 +1,4 @@
-pillow
+pillow==9.1.1
 rembg==1.0.27
-matplotlib
+matplotlib==3.5.2
+customtkinter==4.5.9
