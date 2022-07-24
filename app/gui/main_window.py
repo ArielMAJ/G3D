@@ -10,14 +10,14 @@ import customtkinter as ctk  # type: ignore[import]
 
 try:
     from utilities.im_processing import load_img  # type: ignore[import]
-    from utilities.im_bg import rm_bg, rm_bg_from_folder  # type: ignore[import]
+    from utilities.im_bg import rm_bg, rm_bg_from_folder, imp_th  # type: ignore[import]
     from utilities.paths import join_pr  # type: ignore[import]
 except ImportError:
     import sys
 
     sys.path.insert(0, os.path.abspath(".."))
     from utilities.im_processing import load_img  # type: ignore[import]
-    from utilities.im_bg import rm_bg, rm_bg_from_folder  # type: ignore[import]
+    from utilities.im_bg import rm_bg, rm_bg_from_folder, imp_th  # type: ignore[import]
     from utilities.paths import join_pr  # type: ignore[import]
 
 ctk.set_appearance_mode("dark")

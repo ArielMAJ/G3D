@@ -30,7 +30,7 @@ def main() -> int:
     This function will start the app.
     """
     # This will force loading screen to stay up until rembg is imported (it is a slow import).
-    loading_screen = LoadingScreen(wait_for=[main_window.im_bg.imp_th])
+    loading_screen = LoadingScreen(wait_for=[main_window.imp_th])
     loading_screen.mainloop()
 
     root = main_window.MainWindow()
