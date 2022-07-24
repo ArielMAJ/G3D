@@ -91,8 +91,11 @@ class MainWindow(ctk.CTk):
             self.settings = {
                 "default_path_to_images": "/",
                 "padx": 5,
-                "pady": 1,
+                "pady": 2,
+                "ipady": 3,
                 "title": "",
+                "auth": "",
+                "api_link": "",
             }
             if not os.path.exists(folder_path := join_pr("resources")):
                 os.mkdir(folder_path)
@@ -150,7 +153,7 @@ class MainWindow(ctk.CTk):
             column=2,
             padx=self.settings["padx"],
             pady=self.settings["pady"],
-            ipady=self.settings["pady"] * 3,
+            ipady=self.settings["ipady"],
             sticky="NEWS",
         )
 
@@ -167,7 +170,7 @@ class MainWindow(ctk.CTk):
             column=2,
             padx=self.settings["padx"],
             pady=self.settings["pady"],
-            ipady=self.settings["pady"] * 3,
+            ipady=self.settings["ipady"],
             sticky="NEWS",
         )
 
@@ -196,14 +199,14 @@ class MainWindow(ctk.CTk):
             corner_radius=5,
             # bg=self.colors["app_bg_color"],
             # activebackground=self.colors["app_bg_color"],
-            # command=...,
+            command=lambda: print("Click"),
         )
         self.widgets["btn_montar"].grid(
             column=2,
             row=3,
             padx=self.settings["padx"],
             pady=self.settings["pady"],
-            ipady=self.settings["pady"] * 3,
+            ipady=self.settings["ipady"],
             sticky="NEWS",
         )
 
@@ -233,7 +236,7 @@ class MainWindow(ctk.CTk):
             # border=0,
             # bg=self.colors["app_bg_color"],
             # activebackground=self.colors["app_bg_color"],
-            # command=...,
+            command=lambda: print("Click"),
         )
 
         self.widgets["btn_upload"].grid(
@@ -241,7 +244,7 @@ class MainWindow(ctk.CTk):
             row=4,
             padx=self.settings["padx"],
             pady=self.settings["pady"],
-            ipady=self.settings["pady"] * 3,
+            ipady=self.settings["ipady"],
             sticky="NEWS",
         )
 
@@ -254,14 +257,14 @@ class MainWindow(ctk.CTk):
             # border=0,
             # bg=self.colors["app_bg_color"],
             # activebackground=self.colors["app_bg_color"],
-            # command=...,
+            command=lambda: print("Click"),
         )
         self.widgets["btn_refresh"].grid(
             column=2,
             row=1,
             padx=self.settings["padx"],
             pady=self.settings["pady"],
-            ipady=self.settings["pady"] * 3,
+            ipady=self.settings["ipady"],
             sticky="NEWS",
         )
 
