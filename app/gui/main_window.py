@@ -75,6 +75,7 @@ class MainWindow(ctk.CTk):
         self.vars["folder_path"].set(self.settings["default_path_to_images"])
 
         # self.grid_rowconfigure(0, weight=1)
+        # self.grid_rowconfigure(10, weight=1)
         self.grid_columnconfigure(1, weight=1)
 
     def _check_and_load_settings(self) -> None:
@@ -107,6 +108,7 @@ class MainWindow(ctk.CTk):
         This function should handle creating and placing most of the widgets.
         """
 
+        row = 1
         self.widgets["lbl_folder"] = ctk.CTkLabel(
             self,
             text="Pasta:",  # Folder
@@ -117,7 +119,7 @@ class MainWindow(ctk.CTk):
             # justify="left",
         )
         self.widgets["lbl_folder"].grid(
-            row=0,
+            row=row,
             column=0,
             padx=self.settings["padx"],
             pady=self.settings["pady"],
@@ -129,12 +131,11 @@ class MainWindow(ctk.CTk):
             textvariable=self.vars["folder_path"],
             # Set "bg" to "self.colors["app_bg_color"]" once all widgets are placed.
             bg_color="green",  # self.colors["app_bg_color"],
-            width=60,
             anchor=self._path_anchor,
             justify="left",
         )
         self.widgets["lbl_folder_path"].grid(
-            row=0,
+            row=row,
             column=1,
             padx=self.settings["padx"],
             pady=self.settings["pady"],
@@ -149,24 +150,7 @@ class MainWindow(ctk.CTk):
             corner_radius=5,
         )
         self.widgets["btn_search_folder"].grid(
-            row=0,
-            column=2,
-            padx=self.settings["padx"],
-            pady=self.settings["pady"],
-            ipady=self.settings["ipady"],
-            sticky="NEWS",
-        )
-
-        self.widgets["btn_rembg_FOLDER"] = ctk.CTkButton(
-            self,
-            # Remove background (all subfolders)
-            text="FUNDOS      ",
-            image=self.images["bg"],
-            corner_radius=5,
-            command=self.folder_remove_background_button_press,
-        )
-        self.widgets["btn_rembg_FOLDER"].grid(
-            row=2,
+            row=row,
             column=2,
             padx=self.settings["padx"],
             pady=self.settings["pady"],
@@ -184,10 +168,47 @@ class MainWindow(ctk.CTk):
             # anchor="center",
         )
         self.widgets["lbl_folders_to_process"].grid(
+            row=(row := row + 1),
             column=1,
-            row=1,
             padx=self.settings["padx"],
             pady=self.settings["pady"],
+            sticky="NEWS",
+        )
+
+        self.widgets["btn_refresh"] = ctk.CTkButton(
+            text="ATUALIZAR ",  # Refresh .
+            image=self.images["sync"],
+            compound="left",
+            # padx=self.settings["padx"],
+            corner_radius=5,
+            # border=0,
+            # bg=self.colors["app_bg_color"],
+            # activebackground=self.colors["app_bg_color"],
+            command=lambda: print("Click"),
+        )
+        self.widgets["btn_refresh"].grid(
+            row=row,
+            column=2,
+            padx=self.settings["padx"],
+            pady=self.settings["pady"],
+            ipady=self.settings["ipady"],
+            sticky="NEWS",
+        )
+
+        self.widgets["btn_rembg_FOLDER"] = ctk.CTkButton(
+            self,
+            # Remove background (all subfolders)
+            text="FUNDOS      ",
+            image=self.images["bg"],
+            corner_radius=5,
+            command=self.folder_remove_background_button_press,
+        )
+        self.widgets["btn_rembg_FOLDER"].grid(
+            row=(row := row + 1),
+            column=2,
+            padx=self.settings["padx"],
+            pady=self.settings["pady"],
+            ipady=self.settings["ipady"],
             sticky="NEWS",
         )
 
@@ -202,8 +223,8 @@ class MainWindow(ctk.CTk):
             command=lambda: print("Click"),
         )
         self.widgets["btn_montar"].grid(
+            row=(row := row + 1),
             column=2,
-            row=3,
             padx=self.settings["padx"],
             pady=self.settings["pady"],
             ipady=self.settings["ipady"],
@@ -220,8 +241,8 @@ class MainWindow(ctk.CTk):
             # anchor="center",
         )
         self.widgets["lbl_folders_to_upload"].grid(
+            row=row,
             column=1,
-            row=3,
             padx=self.settings["padx"],
             pady=self.settings["pady"],
             sticky="NEWS",
@@ -240,28 +261,8 @@ class MainWindow(ctk.CTk):
         )
 
         self.widgets["btn_upload"].grid(
+            row=(row := row + 1),
             column=2,
-            row=4,
-            padx=self.settings["padx"],
-            pady=self.settings["pady"],
-            ipady=self.settings["ipady"],
-            sticky="NEWS",
-        )
-
-        self.widgets["btn_refresh"] = ctk.CTkButton(
-            text="ATUALIZAR ",  # Refresh .
-            image=self.images["sync"],
-            compound="left",
-            # padx=self.settings["padx"],
-            corner_radius=5,
-            # border=0,
-            # bg=self.colors["app_bg_color"],
-            # activebackground=self.colors["app_bg_color"],
-            command=lambda: print("Click"),
-        )
-        self.widgets["btn_refresh"].grid(
-            column=2,
-            row=1,
             padx=self.settings["padx"],
             pady=self.settings["pady"],
             ipady=self.settings["ipady"],
