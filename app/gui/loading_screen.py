@@ -32,7 +32,6 @@ class LoadingScreen(Tk):
         self._wait()
 
     def _draw_window(self) -> None:
-
         label = Label(self, image=self.logo_tk, bg="black")
         label.place(x=0, y=0)
 
@@ -41,8 +40,8 @@ class LoadingScreen(Tk):
         # self.update()
 
         offset = {
-            "x": int(0.5 * self.winfo_screenwidth() - self.logo.size[0] // 2),
-            "y": int(0.5 * self.winfo_screenheight() - self.logo.size[1] // 2),
+            "x": int(self.winfo_screenwidth() // 2 - self.logo.size[0] // 2),
+            "y": int(self.winfo_screenheight() // 2 - self.logo.size[1] // 2),
         }
         self.geometry(f"+{offset['x']}+{offset['y']}")
 
