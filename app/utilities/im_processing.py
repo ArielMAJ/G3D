@@ -6,7 +6,7 @@ from typing import Union
 from PIL import Image, ImageTk  # type: ignore[import]
 
 
-def load_img(path, size: Union[tuple[int],float] = None):
+def load_img(path, size: Union[tuple[int], float] = None):
     """
     This should load images.
     The size parameter can be:
@@ -25,7 +25,5 @@ def load_img(path, size: Union[tuple[int],float] = None):
         img = Image.open(path)
         new_size = tuple(int(length * size) for length in img.size)
         return ImageTk.PhotoImage(img.resize(new_size))
-
-    
 
     raise ValueError("Expected size to be either a tuple of ints, a float or None.")
