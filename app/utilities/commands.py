@@ -99,9 +99,9 @@ def montar_template(patient_id, path_pasta, template):
         try:
             patient_id = int(patient_id.split("-")[0])
         except ValueError:
-            patient_id = input(
-                "Erro ao identificar ID, por favor escreva-o manualmente aqui:\n"
-            )
+            salvar_info_erro("Erro ao identificar ID.\n"):
+            raise ValueError # TODO: Create custom exception.
+
     # print(f'Procurando dados do paciente {patient_id} e escrevendo no template...\n')
 
     cabecalho, nome_paciente = info_paciente_para_template(patient_id)
