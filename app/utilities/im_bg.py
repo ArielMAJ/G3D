@@ -17,7 +17,7 @@ def importer():
     uses it or in a different thread feels like it makes for a better user experience.
     """
     global bg
-    from rembg import bg  # type: ignore[import]
+    # from rembg import bg  # type: ignore[import]
 
 
 imp_th = threading.Thread(target=importer)
